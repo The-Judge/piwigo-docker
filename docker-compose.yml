@@ -3,18 +3,13 @@ version: '3.1'
 services:
 
   piwigo:
-    image: piwigo:${PIWIGO_VERSION:-12.2.0}
+    image: derjudge/piwigo:${PIWIGO_VERSION:-12.2.0}
     restart: unless-stopped
     ports:
       - 80
     build:
       context: ./
       dockerfile: Dockerfile
-      args:
-        PIWIGO_VERSION: ${PIWIGO_VERSION:-12.2.0}
-        PHP_VARIANT: apache
-        PHP_VERSION: 7.4
-        PHP_INI: development
     environment:
       PIWIGO_DB_HOST: ${PIWIGO_DB_HOST:-piwigo-db}
       PIWIGO_DB_NAME: ${PIWIGO_DB_NAME:-piwigo_db}
