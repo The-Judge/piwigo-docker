@@ -27,6 +27,8 @@ if [ $(mysql -s -u"${PIWIGO_DB_USER}" -p"${PIWIGO_DB_PASSWORD}" -h"${PIWIGO_DB_H
       mysql -u"${PIWIGO_DB_USER}" -p"${PIWIGO_DB_PASSWORD}" -h"${PIWIGO_DB_HOST}" "${PIWIGO_DB_NAME}"
 fi
 
+chown -R www-data:www-data "${PIWIGO_DEST}"
+
 # If this environment is the apache variant
 if [ -v APACHE_CONFDIR ]; then
     # first arg is `-f` or `--some-option`
