@@ -3,7 +3,7 @@ version: '3.1'
 services:
 
   piwigo:
-    image: derjudge/piwigo:${PIWIGO_VERSION:-12.2.0}
+    image: derjudge/piwigo:${PIWIGO_VERSION:-12.3.0}
     restart: unless-stopped
     ports:
       - 80
