@@ -52,7 +52,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Replace PHP tag to latest (nightly)
-        run: cat Dockerfile | sed 's#ARG PHP_VERSION=.*#ARG PHP_VERSION=latest#g' | sed 's#ARG PIWIGO_VERSION=.*#ARG PIWIGO_VERSION=latest#g' > Dockerfile
+        run: cat Dockerfile | sed 's#ARG PHP_VERSION=.*#ARG PHP_VERSION=latest#g' > Dockerfile
         if: github.event.schedule == '15 3 * * *'
       - name: Build and push Docker images (nightly)
         uses: docker/build-push-action@v6.7.0
