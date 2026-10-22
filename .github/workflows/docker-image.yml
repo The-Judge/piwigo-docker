@@ -13,6 +13,8 @@ on:
       - main
     tags:
       - '*'
+  schedule:
+    - cron: "15 3 * * *"
 
 # https://stackoverflow.com/a/72408109/1549322
 concurrency:
@@ -49,9 +51,18 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push Docker images (nightly)
+        uses: docker/build-push-action@v6.7.0
+        if: github.event.schedule == '15 3 * * *'
+        with:
+          pull: true
+          push: true
+          context: .
+          platforms: linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.GITHUB_REPO_NAME }}:nightly
       - name: Build and push Docker images (from master/main change)
         uses: docker/build-push-action@v6.7.0
-        if: ${{ github.ref_name == 'master' || github.ref_name == 'main' }}
+        if: ${{ (github.ref_name == 'master' || github.ref_name == 'main') && github.event.schedule != '15 3 * * *' }}
         with:
           pull: true
           push: true
@@ -60,7 +71,7 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.GITHUB_REPO_NAME }}:latest,${{ secrets.DOCKERHUB_USERNAME }}/${{ env.GITHUB_REPO_NAME }}:${{ github.ref_name }},${{ secrets.DOCKERHUB_USERNAME }}/${{ env.GITHUB_REPO_NAME }}:${{ env.APP_VERSION }}
       - name: Build and push Docker images (from branch change)
         uses: docker/build-push-action@v6.7.0
-        if: ${{ github.ref_name != 'master' && github.ref_name != 'main' }}
+        if: ${{ (github.ref_name != 'master' && github.ref_name != 'main') && github.event.schedule != '15 3 * * *' }}
         with:
           pull: true
           push: true
