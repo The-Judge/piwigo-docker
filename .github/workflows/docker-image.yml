@@ -51,9 +51,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Replace PHP tag to latest (nightly)
-        run: cat Dockerfile | sed 's#ARG PHP_VERSION=.*#ARG PHP_VERSION=latest#g' > Dockerfile
-        if: github.event.schedule == '15 3 * * *'
       - name: Build and push Docker images (nightly)
         uses: docker/build-push-action@v6.7.0
         if: github.event.schedule == '15 3 * * *'
@@ -62,6 +59,7 @@ jobs:
           push: true
           context: .
           platforms: linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7
+          build-args: PHP_VERSION=latest
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.GITHUB_REPO_NAME }}:nightly
       - name: Build and push Docker images (from master/main change)
         uses: docker/build-push-action@v6.7.0
